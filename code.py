@@ -139,8 +139,6 @@ for p in people:
     else:
         st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
 st.write("**Breakdown per person**")
-for p in people:
-    st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
 
 # Rounding difference notice
 diff = int(round(grand_total)) - sum_rounded
@@ -158,3 +156,4 @@ with st.expander("Notes"):
 - **Discount** is subtracted proportionally among all people.  
         """
     )
+
