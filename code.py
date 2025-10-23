@@ -241,7 +241,7 @@ max_value = per_person_rounded[max_person]
 st.write("**Breakdown per person**")
 for p in people:
     if p == max_person:
-        st.markdown(f"- **{p}: {rupiah(max_value)} — 5 big booms for the brokie :p**")
+        st.markdown(f"- **{p}: {rupiah(max_value)} — 5 big booms for the brokie :O <3**")
     else:
         st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
 st.write("**Breakdown per person**")
@@ -262,6 +262,7 @@ with st.expander("Notes"):
 - **Discount** is subtracted proportionally among all people.  
         """
     )
+
 
 
 
