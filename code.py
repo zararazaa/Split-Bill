@@ -131,7 +131,7 @@ discount_pct = st.sidebar.number_input(
     value=0.0, 
     step=0.5, 
     key="discount_pct",
-    help="Applied to the subtotal, and TAX is then based on the discounted subtotal."
+    help="Applied to the subtotal, and TAX is then based on the discounted subtotal.")
 rounding = st.sidebar.selectbox(
     "Rounding",
     options=["none", "100", "1000"],
@@ -203,9 +203,6 @@ else:
 
 grand_total = discounted_subtotal + service + tax
 
-discount_amount = subtotal * (discount_pct / 100)
-after_discount = max(subtotal + service + tax - discount_amount, 0)
-grand_total = after_discount
 
 
 # ---------- Display totals ----------
@@ -288,6 +285,7 @@ with st.expander("Notes"):
 - **Tax**: figure out the ratio and split urself :).  
         """
     )
+
 
 
 
