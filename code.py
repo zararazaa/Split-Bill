@@ -200,58 +200,68 @@ m2.metric("Service", rupiah(int(service)))
 m3.metric("VAT (PPN)", rupiah(int(tax)))
 m4.metric("Grand total", rupiah(int(grand_total)))
 
+
 if discount > 0:
     st.caption(f"Discount applied: - {rupiah(discount)}")
 
-st.divider()
-st.subheader("Per-person result")
+# ---------- Gate: show results only after user enters something ----------
+has_names = all(p.strip() for p in people)
+has_assignments = any(x["line_total"] > 0 and len(x["assigned"]) > 0 for x in items)
+ready = (subtotal > 0) and has_names and has_assignments
 
-# Start with zero
-per_person = {p: 0.0 for p in people}
-
-if mode == "Equal split across all items":
-    share = subtotal / max(n_people, 1)
-    for p in people:
-        per_person[p] += share
-else:
-    # Per item: split the *line_total* equally among selected people
-    for x in items:
-        if not x["assigned"]:
-            continue
-        split = x["line_total"] / len(x["assigned"])
-        for p in x["assigned"]:
-            per_person[p] += split
-
-# Allocate service, tax, and discount proportionally to pre-allocation
-pre_alloc_total = sum(per_person.values()) or 1
-for p in people:
-    w = per_person[p] / pre_alloc_total
-    per_person[p] += w * service
-    per_person[p] += w * tax
-    per_person[p] -= w * discount
-
-# Apply rounding rule
-per_person_rounded = {p: round_rule(v, rounding) for p, v in per_person.items()}
-sum_rounded = sum(per_person_rounded.values())
+# if not ready:
+#     st.info("Add at least one item with a unit price/qty and assign it to someone to see the per-person results.")
 
 
-max_person = max(per_person_rounded, key=per_person_rounded.get)
-max_value = per_person_rounded[max_person]
+if ready:
+    st.divider()
+    st.subheader("Per-person result")
 
-st.write("**Total per person**")
-for p in people:
-    if p == max_person:
-        st.markdown(f"- **{p}: {rupiah(max_value)} <3 5 big booms for the brokie <3**")
+    # Start with zero
+    per_person = {p: 0.0 for p in people}
+
+    if mode == "Equal split across all items":
+        share = subtotal / max(n_people, 1)
+        for p in people:
+            per_person[p] += share
     else:
-        st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
+        for x in items:
+            if not x["assigned"]:
+                continue
+            split = x["line_total"] / len(x["assigned"])
+            for p in x["assigned"]:
+                per_person[p] += split
 
-# Rounding difference notice
-diff = int(round(grand_total)) - sum_rounded
-if diff != 0:
-    st.info(
-        f"Rounding difference: {rupiah(diff)}. "
-        f"You can assign it to one person or change the rounding rule."
-    )
+    # Allocate service, tax, discount proportionally
+    pre_alloc_total = sum(per_person.values()) or 1
+    for p in people:
+        w = per_person[p] / pre_alloc_total
+        per_person[p] += w * service
+        per_person[p] += w * tax
+        per_person[p] -= w * discount
+
+    # Rounding
+    per_person_rounded = {p: round_rule(v, rounding) for p, v in per_person.items()}
+    sum_rounded = sum(per_person_rounded.values())
+
+    # Find highest payer
+    max_person = max(per_person_rounded, key=per_person_rounded.get)
+    max_value = per_person_rounded[max_person]
+
+    st.write("**Breakdown per person**")
+    for p in people:
+        if p == max_person:
+            st.markdown(f"- **{p}: {rupiah(max_value)} 5 big booms for the brokie <3**")
+        else:
+            st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
+
+    diff = int(round(grand_total)) - sum_rounded
+    if diff != 0:
+        st.info(
+            f"Rounding difference: {rupiah(diff)}. "
+            f"You can assign it to one person or change the rounding rule."
+        )
+
 
 with st.expander("Notes"):
     st.markdown(
@@ -259,6 +269,7 @@ with st.expander("Notes"):
 - **Tax**: figure out the ratio and split urself :).  
         """
     )
+
 
 
 
