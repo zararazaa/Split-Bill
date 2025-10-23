@@ -2,28 +2,18 @@ import streamlit as st
 from decimal import Decimal, ROUND_HALF_UP
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
-    html, body, [class*="css"] {
-        font-family: 'Fredoka', sans-serif;
+    /* 🌷 Import a cute Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Quicksand', sans-serif;
     }
 
+    /* Optional: make headers stand out */
     h1, h2, h3 {
-        color: #e75480;
-        font-family: 'Fredoka', sans-serif;
-        font-weight: 700;
-    }
-
-    /* optional pink button style */
-    div.stButton > button {
-        background-color: #ff4b9f;
-        color: white;
-        border-radius: 10px;
-        border: none;
-        transition: 0.3s;
-    }
-    div.stButton > button:hover {
-        background-color: #ff75b5;
-        transform: scale(1.05);
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 600;
+        color: #d81b60;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -183,5 +173,6 @@ with st.expander("Notes"):
 - **Discount** is subtracted proportionally among all people.  
         """
     )
+
 
 
