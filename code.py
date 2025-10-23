@@ -2,7 +2,6 @@ import streamlit as st
 from decimal import Decimal, ROUND_HALF_UP
 st.markdown("""
     <style>
-    /* 🌷 Import a cute Google Font */
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
 
     html, body, [class*="css"]  {
@@ -173,6 +172,7 @@ with st.expander("Notes"):
 - **Discount** is subtracted proportionally among all people.  
         """
     )
+
 
 
 
