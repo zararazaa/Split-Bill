@@ -85,16 +85,17 @@ else:
     tax = (subtotal + service) * (tax_pct / 100)
 
 after_discount = max(subtotal + service + tax - discount, 0)
+grand_total = after_discount
 
+# ---------- Display totals ----------
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Subtotal", rupiah(subtotal))
 m2.metric("Service", rupiah(int(service)))
 m3.metric("VAT (PPN)", rupiah(int(tax)))
 m4.metric("Grand total", rupiah(int(grand_total)))
+
 if discount > 0:
     st.caption(f"Discount applied: - {rupiah(discount)}")
-if payment_fee_pct > 0:
-    st.caption(f"Payment fee (est.): {rupiah(int(payment_fee))}")
 
 st.divider()
 st.subheader("Per-person result")
@@ -115,19 +116,28 @@ else:
         for p in x["assigned"]:
             per_person[p] += split
 
-# Allocate service, tax, discount, and payment fee proportionally to pre-allocation
+# Allocate service, tax, and discount proportionally to pre-allocation
 pre_alloc_total = sum(per_person.values()) or 1
 for p in people:
     w = per_person[p] / pre_alloc_total
     per_person[p] += w * service
     per_person[p] += w * tax
     per_person[p] -= w * discount
-    per_person[p] += w * payment_fee
 
 # Apply rounding rule
 per_person_rounded = {p: round_rule(v, rounding) for p, v in per_person.items()}
 sum_rounded = sum(per_person_rounded.values())
 
+
+max_person = max(per_person_rounded, key=per_person_rounded.get)
+max_value = per_person_rounded[max_person]
+
+st.write("**Breakdown per person**")
+for p in people:
+    if p == max_person:
+        st.markdown(f"- **{p}: {rupiah(max_value)} — 5 big booms for the brokie :p**")
+    else:
+        st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
 st.write("**Breakdown per person**")
 for p in people:
     st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
@@ -143,11 +153,8 @@ if diff != 0:
 with st.expander("Notes"):
     st.markdown(
         """
-- **Unit price × Qty** builds each line total; splitting is based on the resulting line totals.
-- **Tax base** controls whether PPN is on subtotal only, or on (subtotal + service).
-- **Payment fees** can be spread proportionally if you enter a %.
+- **Unit price × Qty** builds each line total; splitting is based on the resulting line totals.  
+- **Tax base** controls whether PPN is on subtotal only, or on (subtotal + service).  
+- **Discount** is subtracted proportionally among all people.  
         """
     )
-
-
-
