@@ -35,8 +35,8 @@ tax_base = st.sidebar.radio(
     help="Some places tax only the subtotal; others tax (subtotal + service)."
 )
 
-st.title("🍽️ Split Bill (Indonesia)")
-st.caption("Split per person with item quantities, VAT/service, discounts, payment fees, and Rupiah rounding.")
+st.title("Split Bill :D")
+st.caption("RIP Line Split Bill, you will be dearly missed")
 
 # ---------- Inputs ----------
 colA, colB = st.columns(2)
@@ -149,6 +149,6 @@ with st.expander("Notes"):
 - **Unit price × Qty** builds each line total; splitting is based on the resulting line totals.
 - **Tax base** controls whether PPN is on subtotal only, or on (subtotal + service).
 - **Payment fees** can be spread proportionally if you enter a %.
-- Extend idea: add “already paid” inputs per person to compute change/debts automatically.
         """
     )
+
