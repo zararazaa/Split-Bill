@@ -260,16 +260,18 @@ if ready:
     per_person_rounded = {p: round_rule(v, rounding) for p, v in per_person.items()}
     sum_rounded = sum(per_person_rounded.values())
 
-    # Find highest payer
-    max_person = max(per_person_rounded, key=per_person_rounded.get)
-    max_value = per_person_rounded[max_person]
-
+    # ---------- Find top payer(s) ----------
+    max_value = max(per_person_rounded.values())
+    leaders = [p for p, v in per_person_rounded.items() if v == max_value]
+    single_winner = (len(leaders) == 1)
+    
     st.write("**Breakdown per person**")
     for p in people:
-        if p == max_person:
-            st.markdown(f"- **{p}: {rupiah(max_value)} 5 big booms for the brokie <3**")
+        if single_winner and p == leaders[0]:
+            st.markdown(f"- **{p}: {rupiah(per_person_rounded[p])} 5 big booms for the brokie <3**")
         else:
             st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
+
 
     diff = int(round(grand_total)) - sum_rounded
     if diff != 0:
@@ -285,6 +287,7 @@ with st.expander("Notes"):
 - **Tax**: figure out the ratio and split urself :).  
         """
     )
+
 
 
 
