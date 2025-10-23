@@ -31,6 +31,44 @@ def round_rule(amount: float, rule: str) -> int:
 # ---------- Page & Sidebar ----------
 st.set_page_config(page_title="Split Bill", page_icon="🍽️", layout="centered")
 
+
+st.markdown("""
+<style>
+.stApp {
+    background-color: #fff5fa;
+}
+
+/* Add a cute pink border to main container divs */
+div[data-testid="stVerticalBlock"] > div {
+    border: 2px solid #ffc4d6;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+section[data-testid="stSidebar"] {
+    background-color: #ffe4ec;
+    border-right: 2px solid #ffb6c1;
+}
+
+h1, h2, h3 {
+    color: #e75480;
+}
+
+div.stButton > button {
+    background-color: #ff4b9f;
+    color: white;
+    border-radius: 10px;
+    border: none;
+}
+div.stButton > button:hover {
+    background-color: #ff7fb8;
+    transform: scale(1.03);
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 st.sidebar.header("Settings")
 tax_pct = st.sidebar.number_input("VAT (PPN) %", min_value=0.0, value=0.0, step=0.5, key="tax_pct")
 service_pct = st.sidebar.number_input("Service charge %", min_value=0.0, value=0.0, step=0.5, key="service_pct")
@@ -172,6 +210,7 @@ with st.expander("Notes"):
 - **Discount** is subtracted proportionally among all people.  
         """
     )
+
 
 
 
