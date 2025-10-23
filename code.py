@@ -131,8 +131,7 @@ discount_pct = st.sidebar.number_input(
     value=0.0, 
     step=0.5, 
     key="discount_pct",
-    help="Percentage discount applied to the subtotal before tax/service."
-)
+    help="Applied to the subtotal, and TAX is then based on the discounted subtotal."
 rounding = st.sidebar.selectbox(
     "Rounding",
     options=["none", "100", "1000"],
@@ -189,14 +188,20 @@ mode = st.radio("Choose how to split", ["Per item (default)", "Equal split acros
 # ---------- Compute ----------
 subtotal = sum(x["line_total"] for x in items)
 
+# Discount first (on subtotal)
+discount_amount = subtotal * (discount_pct / 100.0)
+discounted_subtotal = max(subtotal - discount_amount, 0)
+
 # Service first
-service = subtotal * (service_pct / 100)
+service = subtotal * (service_pct / 100.0)
 
 # Tax base per your setting
 if tax_base == "subtotal":
-    tax = subtotal * (tax_pct / 100)
+    tax = discounted_subtotal * (tax_pct / 100.0)
 else:
-    tax = (subtotal + service) * (tax_pct / 100)
+    tax = (discounted_subtotal + service) * (tax_pct / 100.0)
+
+grand_total = discounted_subtotal + service + tax
 
 discount_amount = subtotal * (discount_pct / 100)
 after_discount = max(subtotal + service + tax - discount_amount, 0)
@@ -208,7 +213,9 @@ m1, m2, m3, m4 = st.columns(4)
 m1.metric("Subtotal", rupiah(subtotal))
 m2.metric("Service", rupiah(int(service)))
 m3.metric("VAT (PPN)", rupiah(int(tax)))
-m4.metric("Grand total", rupiah(int(grand_total)))
+m4.metric("Grand total", rupiah(int(round(grand_total))))
+if discount_pct > 0:
+    st.caption(f"Discount ({discount_pct:.1f}%) applied to subtotal: - {rupiah(int(discount_amount))}")
 
 
 if discount_pct > 0:
@@ -281,6 +288,7 @@ with st.expander("Notes"):
 - **Tax**: figure out the ratio and split urself :).  
         """
     )
+
 
 
 
