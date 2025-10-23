@@ -19,7 +19,6 @@ st.sidebar.header("Settings")
 tax_pct = st.sidebar.number_input("VAT (PPN) %", min_value=0.0, value=0.0, step=0.5, key="tax_pct")
 service_pct = st.sidebar.number_input("Service charge %", min_value=0.0, value=0.0, step=0.5, key="service_pct")
 discount = st.sidebar.number_input("Discount amount (IDR)", min_value=0, value=0, step=1000, key="discount")
-payment_fee_pct = st.sidebar.number_input("Payment fee % (QRIS/e-wallet/bank) — optional", min_value=0.0, value=0.0, step=0.1, key="payment_fee_pct")
 rounding = st.sidebar.selectbox(
     "Rounding",
     options=["none", "100", "1000"],
@@ -151,4 +150,5 @@ with st.expander("Notes"):
 - **Payment fees** can be spread proportionally if you enter a %.
         """
     )
+
 
