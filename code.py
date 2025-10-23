@@ -17,7 +17,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ---------- Helpers ----------
+# Formatting
 def rupiah(n: float | int) -> str:
     s = f"{int(n):,}".replace(",", ".")
     return f"Rp {s}"
@@ -28,11 +28,11 @@ def round_rule(amount: float, rule: str) -> int:
     step = 100 if rule == "100" else 1000
     return int(step * round(amount / step))
 
-# ---------- Page & Sidebar ----------
+# Page Split
 st.set_page_config(page_title="Split Bill", page_icon="🍽️", layout="centered")
 
 
-
+# To make it pretty
 st.markdown("""
 <style>
 :root{
@@ -150,7 +150,7 @@ tax_base = st.sidebar.radio(
 st.title("Split Bill :D")
 st.caption("RIP Line Split Bill, you will be dearly missed")
 
-# ---------- Inputs ----------
+# Inputs
 colA, colB = st.columns(2)
 with colA:
     n_people = st.number_input("Number of people", min_value=1, value=3, step=1)
@@ -176,7 +176,7 @@ for i in range(n_items):
     line_total = unit_price * qty
     items.append({"name": name, "unit_price": unit_price, "qty": qty, "line_total": line_total, "assigned": assigned})
 
-# Quick per-item preview
+# Item summary
 with st.expander("Preview item totals"):
     for x in items:
         st.write(f"- {x['name']} — {x['qty']} × {rupiah(x['unit_price'])} = **{rupiah(x['line_total'])}**")
@@ -185,7 +185,7 @@ st.divider()
 st.subheader("Split mode")
 mode = st.radio("Choose how to split", ["Per item (default)", "Equal split across all items"])
 
-# ---------- Compute ----------
+# Calculating
 subtotal = sum(x["line_total"] for x in items)
 
 # Discount first (on subtotal)
@@ -205,7 +205,7 @@ grand_total = discounted_subtotal + service + tax
 
 
 
-# ---------- Display totals ----------
+# Totals
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Subtotal", rupiah(subtotal))
 m2.metric("Service", rupiah(int(service)))
@@ -219,13 +219,10 @@ if discount_pct > 0:
     st.caption(f"Discount ({discount_pct:.1f}%) applied: - {rupiah(int(discount_amount))}")
 
 
-# ---------- Gate: show results only after user enters something ----------
+# Hides the results
 has_names = all(p.strip() for p in people)
 has_assignments = any(x["line_total"] > 0 and len(x["assigned"]) > 0 for x in items)
 ready = (subtotal > 0) and has_names and has_assignments
-
-# if not ready:
-#     st.info("Add at least one item with a unit price/qty and assign it to someone to see the per-person results.")
 
 
 if ready:
@@ -247,7 +244,7 @@ if ready:
             for p in x["assigned"]:
                 per_person[p] += split
 
-    # Allocate service, tax, discount proportionally
+    # Service + Tax + Discount
     pre_alloc_total = sum(per_person.values()) or 1
     for p in people:
         w = per_person[p] / pre_alloc_total
@@ -260,7 +257,6 @@ if ready:
     per_person_rounded = {p: round_rule(v, rounding) for p, v in per_person.items()}
     sum_rounded = sum(per_person_rounded.values())
 
-    # ---------- Find top payer(s) ----------
     max_value = max(per_person_rounded.values())
     leaders = [p for p, v in per_person_rounded.items() if v == max_value]
     single_winner = (len(leaders) == 1)
@@ -268,7 +264,7 @@ if ready:
     st.write("**Breakdown per person**")
     for p in people:
         if single_winner and p == leaders[0]:
-            st.markdown(f"- **{p}: {rupiah(per_person_rounded[p])} 5 big booms for the brokie <3**")
+            st.markdown(f"- **{p}: {rupiah(per_person_rounded[p])} 5 big booms for the biggest spender <3**")
         else:
             st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
 
@@ -287,6 +283,7 @@ with st.expander("Notes"):
 - **Tax**: figure out the ratio and split urself :).  
         """
     )
+
 
 
 
