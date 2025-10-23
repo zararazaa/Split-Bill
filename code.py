@@ -124,7 +124,15 @@ div.stButton > button:hover {
 st.sidebar.header("Settings")
 tax_pct = st.sidebar.number_input("VAT (PPN) %", min_value=0.0, value=0.0, step=0.5, key="tax_pct")
 service_pct = st.sidebar.number_input("Service charge %", min_value=0.0, value=0.0, step=0.5, key="service_pct")
-discount = st.sidebar.number_input("Discount amount (IDR)", min_value=0, value=0, step=1000, key="discount")
+discount_pct = st.sidebar.number_input(
+    "Discount (%)", 
+    min_value=0.0, 
+    max_value=100.0, 
+    value=0.0, 
+    step=0.5, 
+    key="discount_pct",
+    help="Percentage discount applied to the subtotal before tax/service."
+)
 rounding = st.sidebar.selectbox(
     "Rounding",
     options=["none", "100", "1000"],
@@ -190,8 +198,10 @@ if tax_base == "subtotal":
 else:
     tax = (subtotal + service) * (tax_pct / 100)
 
-after_discount = max(subtotal + service + tax - discount, 0)
+discount_amount = subtotal * (discount_pct / 100)
+after_discount = max(subtotal + service + tax - discount_amount, 0)
 grand_total = after_discount
+
 
 # ---------- Display totals ----------
 m1, m2, m3, m4 = st.columns(4)
@@ -201,8 +211,9 @@ m3.metric("VAT (PPN)", rupiah(int(tax)))
 m4.metric("Grand total", rupiah(int(grand_total)))
 
 
-if discount > 0:
-    st.caption(f"Discount applied: - {rupiah(discount)}")
+if discount_pct > 0:
+    st.caption(f"Discount ({discount_pct:.1f}%) applied: - {rupiah(int(discount_amount))}")
+
 
 # ---------- Gate: show results only after user enters something ----------
 has_names = all(p.strip() for p in people)
@@ -238,7 +249,8 @@ if ready:
         w = per_person[p] / pre_alloc_total
         per_person[p] += w * service
         per_person[p] += w * tax
-        per_person[p] -= w * discount
+        per_person[p] -= w * discount_amount
+
 
     # Rounding
     per_person_rounded = {p: round_rule(v, rounding) for p, v in per_person.items()}
@@ -269,6 +281,7 @@ with st.expander("Notes"):
 - **Tax**: figure out the ratio and split urself :).  
         """
     )
+
 
 
 
