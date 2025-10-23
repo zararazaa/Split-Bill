@@ -1,0 +1,5 @@
+primaryColor = "#ff4b9f"          # your main pink color (buttons, highlights)
+backgroundColor = "#fff5fa"       # page background
+secondaryBackgroundColor = "#ffe4ec" # sidebar/cards background
+textColor = "#2b0017"             # text color (dark reddish)
+font = "sans serif"               # options: sans serif, serif, monospace
