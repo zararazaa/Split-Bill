@@ -32,38 +32,90 @@ def round_rule(amount: float, rule: str) -> int:
 st.set_page_config(page_title="Split Bill", page_icon="🍽️", layout="centered")
 
 
+
 st.markdown("""
 <style>
-.stApp {
-    background-color: #fff5fa;
+:root{
+  --primary: #E37383;     /* your primary */
+  --bg:      #F9F6EE;     /* background */
+  --text:    #0D0D0D;     /* text */
 }
 
-/* Add a cute pink border to main container divs */
-div[data-testid="stVerticalBlock"] > div {
-    border: 2px solid #ffc4d6;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 15px;
+/* App + sidebar colors */
+.stApp { background: var(--bg); color: var(--text); }
+section[data-testid="stSidebar"] { background: var(--bg); }
+
+/* Headings */
+h1, h2, h3, h4 { color: var(--text); }
+
+/* ---------- Input borders ---------- */
+/* Text input */
+div[data-testid="stTextInput"] > div > div {
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(227,115,131,0.08) inset;
 }
 
-section[data-testid="stSidebar"] {
-    background-color: #ffe4ec;
-    border-right: 2px solid #ffb6c1;
+/* Number input */
+div[data-testid="stNumberInput"] > div {
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(227,115,131,0.08) inset;
 }
 
-h1, h2, h3 {
-    color: #e75480;
+/* Selectbox */
+div[data-testid="stSelectbox"] > div {
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(227,115,131,0.08) inset;
 }
 
+/* Multiselect */
+div[data-testid="stMultiSelect"] > div {
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(227,115,131,0.08) inset;
+}
+/* Multiselect pills */
+div[data-baseweb="tag"] {
+  background: #FDE6EA;           /* soft pink chip */
+  color: var(--text);
+  border-radius: 999px;
+}
+
+/* Radio group */
+div[data-testid="stRadio"] {
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(227,115,131,0.08) inset;
+}
+
+/* Focus/hover effect for inputs */
+div[data-testid="stTextInput"] > div > div:focus-within,
+div[data-testid="stNumberInput"] > div:focus-within,
+div[data-testid="stSelectbox"] > div:focus-within,
+div[data-testid="stMultiSelect"] > div:focus-within,
+div[data-testid="stRadio"]:focus-within {
+  border-color: #cc5f6f;
+  box-shadow: 0 0 0 4px rgba(227,115,131,0.18) inset;
+}
+
+/* Buttons in your color */
 div.stButton > button {
-    background-color: #ff4b9f;
-    color: white;
-    border-radius: 10px;
-    border: none;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
 }
 div.stButton > button:hover {
-    background-color: #ff7fb8;
-    transform: scale(1.03);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -210,6 +262,7 @@ with st.expander("Notes"):
 - **Discount** is subtracted proportionally among all people.  
         """
     )
+
 
 
 
