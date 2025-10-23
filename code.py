@@ -238,13 +238,12 @@ sum_rounded = sum(per_person_rounded.values())
 max_person = max(per_person_rounded, key=per_person_rounded.get)
 max_value = per_person_rounded[max_person]
 
-st.write("**Breakdown per person**")
+st.write("**Total per person**")
 for p in people:
     if p == max_person:
-        st.markdown(f"- **{p}: {rupiah(max_value)} </3 5 big booms for the brokie <3**")
+        st.markdown(f"- **{p}: {rupiah(max_value)} <3 5 big booms for the brokie <3**")
     else:
         st.write(f"- {p}: {rupiah(per_person_rounded[p])}")
-st.write("**Breakdown per person**")
 
 # Rounding difference notice
 diff = int(round(grand_total)) - sum_rounded
@@ -256,12 +255,11 @@ if diff != 0:
 
 with st.expander("Notes"):
     st.markdown(
-        """
-- **Unit price × Qty** builds each line total; splitting is based on the resulting line totals.  
-- **Tax base** controls whether PPN is on subtotal only, or on (subtotal + service).  
-- **Discount** is subtracted proportionally among all people.  
+        """  
+- **Tax**: figure out the ratio and split urself :).  
         """
     )
+
 
 
 
