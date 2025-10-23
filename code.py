@@ -85,8 +85,6 @@ else:
     tax = (subtotal + service) * (tax_pct / 100)
 
 after_discount = max(subtotal + service + tax - discount, 0)
-payment_fee = after_discount * (payment_fee_pct / 100)
-grand_total = after_discount + payment_fee
 
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Subtotal", rupiah(subtotal))
@@ -150,5 +148,6 @@ with st.expander("Notes"):
 - **Payment fees** can be spread proportionally if you enter a %.
         """
     )
+
 
 
